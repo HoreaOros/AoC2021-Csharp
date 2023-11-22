@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F4D740C1-B292-442F-8A2C-482FA04C254E}</ProjectGuid>
+    <ProjectGuid>{63309449-3579-4581-A185-E8D5A61A2160}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AoC2021_P04</RootNamespace>
-    <AssemblyName>AoC2021 P04</AssemblyName>
+    <RootNamespace>AoC2021_P05</RootNamespace>
+    <AssemblyName>AoC2021 P05</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

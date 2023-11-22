@@ -27,7 +27,7 @@ namespace AoC2021_P04
                 for (int i = 0; i < 5; i++)
                 {
                     line = sr.ReadLine();
-                    tokens = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    tokens = line.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
                     for (int j = 0;j < 5; j++)
                         card[i, j] = (int.Parse(tokens[j]), false);
                 }

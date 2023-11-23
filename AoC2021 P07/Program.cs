@@ -36,10 +36,10 @@ namespace AoC2021_P07
             for (int d = minim; d <= maxim; d++)
             {
                 int fuel = nums.Sum(x =>
-                {
-                    int diff = Math.Abs(d - x);
-                    return diff * (diff + 1) / 2;
-                });
+                            {
+                                int diff = Math.Abs(d - x);
+                                return diff * (diff + 1) / 2;
+                            });
                 result = (fuel < result)? fuel : result;
             }
             return result;

@@ -44,8 +44,7 @@ namespace AoC2021_P05
             foreach (var item in lines)
             {
                 (x1, y1, x2, y2) = item;
-                if(x1 == x2 && y1 == y2)
-                        Console.WriteLine($"Hey {x1}, {y1}, {x2}, {y2}");
+                
                 if (x1 == x2 || y1 == y2)
                 {
                     if (x1 > x2)

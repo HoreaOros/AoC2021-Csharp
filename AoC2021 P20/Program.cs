@@ -30,10 +30,8 @@ namespace AoC2021_P20
             Dictionary<(int r, int c), char> newImage = inputImage;
             for (int i = 0; i < 50; i++)
             {
-                if (algo[0] == '.')
-                    newImage = Enhance(newImage, 0 - i, 0 - i, ROWS - 1 + i, COLS - 1 + i, '.'); // works only on input. does not work on example
-                else
-                    newImage = Enhance(newImage, 0 - i, 0 - i, ROWS - 1 + i, COLS - 1 + i, i % 2 == 0 ? '.' : '#'); // works only on input. does not work on example
+                newImage = Enhance(newImage, 0 - i, 0 - i, ROWS - 1 + i, COLS - 1 + i, i % 2 == 0?'.':'#'); // works only on input. does not work on example
+
             }
             Console.WriteLine(newImage.Count(x => x.Value == '#'));
 

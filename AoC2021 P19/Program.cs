@@ -12,67 +12,49 @@ namespace AoC2021_P19
 {
     internal class Program
     {
-        static string fileName = "input.txt";
-        static List<Scanner> scanners = new List<Scanner>();
-        static List<(int x, int y, int z)> allBeacons = new List<(int x, int y, int z)> ();
+        static string fileName = "inputTest.txt";
+        static Queue<Scanner> scanners = new Queue<Scanner>();
+        static HashSet<(int x, int y, int z)> allBeacons = new HashSet<(int x, int y, int z)> ();
         static void Main(string[] args)
         {
             ReadData(fileName);
-            foreach (Scanner scanner in scanners)
-            {
-                Console.WriteLine (scanner.Beacons.Count);
-            }
+            
             part1();
             Console.WriteLine();
         }
 
         private static void part1()
         {
-            GetOverlap(allBeacons, scanners[1]);
+            while(scanners.Count > 0)
+            {
+                Scanner s = scanners.Dequeue ();
+                HashSet<(int x, int y, int z)> k = calc_intersect(allBeacons, s);
+                if(k != null)
+                    allBeacons.UnionWith (k);
+                else
+                    scanners.Enqueue (s);
+                Console.WriteLine(scanners.Count);
+            }
+            Console.WriteLine(allBeacons.Count);
         }
 
-        private static List<(int x, int y, int z)> GetOverlap(List<(int x, int y, int z)> allb, Scanner s)
+        private static HashSet<(int x, int y, int z)> calc_intersect(HashSet<(int x, int y, int z)> allBeacons, Scanner s)
         {
-            for(int i = 0; i < s.AllBeaconsRotations.Count; i++)
-            {
-                var b = s.AllBeaconsRotations[i];
-                var res = IsOverlapBeacons(allb, b);
-                if(res.r == true)
-                {
-                    (int dx, int dy, int dz) = res.diff;
-                    foreach(var item in s.AllBeaconsRotations[i])
+            (int x, int y, int z) off;
+            foreach(var s2 in s.AllBeaconsRotations)
+                foreach(var a in allBeacons)
+                    foreach(var b in s2)
                     {
-                        (int x, int y, int z) = item;
-                        allBeacons.Add((x + dx, y + dy, z + dz));
+                        off = (a.x - b.x, a.y - b.y, a.z - b.z);
+                        HashSet<(int x, int y, int z)> c = new HashSet<(int x, int y, int z)>();
+                        foreach (var item in s2)
+                            c.Add((item.x + off.x, item.y + off.y, item.z + off.z));
+
+                        HashSet<(int x, int y, int z)> intersection = new HashSet<(int x, int y, int z)>(allBeacons.Intersect (c));
+                        if (intersection.Count >= 12)
+                            return c;
                     }
-
-                    break;
-                }
-            }
-
             return null;
-        }
-
-        private static (bool r, (int, int, int) diff) IsOverlapBeacons(List<(int x, int y, int z)> allb, List<(int x, int y, int z)> b)
-        {
-            int t = allb.Count - b.Count + 1;
-            for(int k = 0; k < t; k++)
-            {
-                var diff = new Dictionary<(int, int, int), int>();
-                for (int i = 0; i < b.Count; i++)
-                {
-                    var key = (allb[i + k].x - b[i].x, allb[i + k].y - b[i].y, allb[i + k].z - b[i].z); 
-                    if(diff.ContainsKey(key))
-                    {
-                        diff[key]++;
-                        if (diff[key] >= 12)
-                            return (true, key);
-                    }
-                    else
-                        diff[key] = 1;
-                }
-            }
-            return (false, (0, 0, 0));
         }
 
         private static void ReadData(string fileName)
@@ -93,38 +75,18 @@ namespace AoC2021_P19
                     Match match = r.Match(lines[k]);
                     scanner.Beacons.Add((int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value), int.Parse(match.Groups[3].Value)));
                 }
-                scanner.Beacons.Sort(new TupleCompare());
                 if (i > 0)
                     scanner.GetRotations();
                 else
                     scanner.AllBeaconsRotations.Add(scanner.Beacons);
-                scanners.Add(scanner);
+                scanners.Enqueue(scanner);
                 Console.WriteLine(scanner);
             }
-            allBeacons.AddRange(scanners[0].Beacons);
+            allBeacons = new HashSet<(int x, int y, int z)>(scanners.Dequeue().Beacons);
         }
     }
 
-    internal class TupleCompare : IComparer<(int x, int y, int z)>
-    {
-        public int Compare((int x, int y, int z) t1, (int x, int y, int z) t2)
-        {
-            if (t1.x < t2.x)
-                return -1;
-            else if (t1.x > t2.x)
-                return 1;
-            else if (t1.y < t2.y)
-                return -1;
-            else if (t1.y > t2.y)
-                return 1;
-            else if (t1.z < t2.z)
-                return -1;
-            else if(t1.z > t2.z)
-                return 1;
-            else return 0;
-        }
-    }
-
+    
     class Scanner
     {
         public List<(int x, int y, int z)> Beacons { get; set; }
@@ -207,11 +169,8 @@ namespace AoC2021_P19
         private List<(int x, int y, int z)> GetRotation(List<(int x, int y, int z)> beacons)
         {
             List<(int x, int y, int z)> lst = new List<(int x, int y, int z)>();
-            foreach(var item in Beacons)
-            {
+            foreach(var item in beacons)
                 lst.Add((item.x, -item.z, item.y));
-            }
-            lst.Sort(new TupleCompare());
             return lst;
         }
     }
